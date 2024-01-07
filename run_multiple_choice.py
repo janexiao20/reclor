@@ -54,7 +54,11 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 ALL_MODELS = sum(
-    (tuple(conf.pretrained_config_archive_map.keys()) for conf in (BertConfig, XLNetConfig, RobertaConfig)), ()
+    (
+        tuple(getattr(conf, "pretrained_config_archive_map", {}).keys())
+        for conf in (BertConfig, XLNetConfig, RobertaConfig)
+    ),
+    (),
 )
 
 MODEL_CLASSES = {
@@ -582,6 +586,7 @@ def main():
     parser.add_argument("--server_port", type=str, default="", help="For distant debugging.")
 
     args = parser.parse_args()
+    print(args)
 
     if (
         os.path.exists(args.output_dir)
